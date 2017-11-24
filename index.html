@@ -121,10 +121,247 @@
 			</h3>
 		</li>
 	</ol>
+	<h2>Javascript规范</h2>
+	<ol>
+		<li>
+			<h3>
+				不使用全局变量命名方式，使用自执行函数方式(function(a,b,c){...}(window.a='',window.b='',window.c));
+			</h3>
+		</li>
+		<li>
+			<h3>
+				脚本文件从立即执行函数开始，使用在内部第一行使用'use strict'，确保错误检查和代码健壮性；
+			</h3>
+		</li>
+		<li>
+			<h3>
+				总是使用var声明变量,所用用到的变量都统一声明到函数内部顶部，只用一个var，用,分割开；
+			</h3>
+		</li>
+		<li>
+			<h3>
+				避免使用==类型转换，使用===判断
+			</h3>
+		</li>
+		<li>
+			<h3>
+				使用真假判断，不关心判断过程
+			</h3>
+		</li>
+		<li>
+			<h3>
+				使用变量赋值逻辑操作:x=x||y||1,经常用来设定默认赋值；
+			</h3>
+		</li>
+		<li>
+			<h3>
+				总是使用分号；分号在表达式的结尾，不在函数的结尾
+			</h3>
+		</li>
+		<li>
+			<h3>使用嵌套函数,隐藏辅助函数</h3>
+		</li>
+		<li>
+			<h3>
+				语句块中不要用函数声明；函数声明在顶部，但是可以使用变量赋值
+			</h3>
+		</li>
+		<li>
+			<h3>
+				可以使用throw抛出一个对象来描述错误
+			</h3>
+		</li>
+		<li>
+			<h3>
+				使用标准特性，例如：string.charAt(0),不适用string[0];
+			</h3>
+		</li>
+		<li>
+			<h3>
+				使用闭包，
+			</h3>
+		</li>
+	</ol>
 	
-	
-	
-	
+	<script>
+		(function(log){
+			  'use strict';
+			 
+			  var a = 10;
+			 
+			  i = 5;
+			 
+			  x();
+			 
+			  for(var i; i < a; i++) {
+			    log(b);
+			    var b = i * i;
+			  }
+			 
+			  if(a === 10) {
+			    f = function() {
+			      log(a);
+			    };
+			    f();
+			 
+			    var f;
+			  }
+			 
+			  function x() {
+			    log('Mr. X!');
+			  }
+			 
+			}(window.console.log));
+			
+			(function(log){
+			  'use strict';
+//			 var name='xiaoming';
+			  log('0' == 0); // true
+			  log('' == false); // true
+			  log('1' == true); // true
+			  log(null == undefined); // true
+			 
+			  var x = {
+			    valueOf: function() {
+			      return 'X';
+			    }
+			  };
+			  log(x == 'X');
+			 
+			 if(name !== undefined) {
+			 	console.log(name);
+//			  throw {
+//			    name: 'System Error',
+//			    message: 'A name should always be specified!'
+//			  }
+			}
+
+			}(window.console.log));
+			
+			//继承
+			(function(log){
+			  	'use strict';
+				//父类构造函数
+			  	function Apple(name) {
+			    	this.name = name;
+			  	}
+				//给父类的prototype上定义一个方法让父类的实例可以继承这个方法，继承了父类的子类也可以调用此方法
+			  	Apple.prototype.eat = function() {
+			   		log('Eating ' + this.name);
+			  	};
+				//子类构造函数
+			  	function GrannySmithApple(name) {
+			  		//让子类可以调用父类的构造函数来实现子类的实例对象
+			    	Apple.prototype.constructor.call(this, name);
+			  	}
+
+				//把父类的实例对象赋值给子类的prototype，让子类实现继承父类
+			  	GrannySmithApple.prototype = Object.create(Apple.prototype);
+				//把子类的prototype对象的指向的构造函数指向子类自己的构造函数
+			  	GrannySmithApple.prototype.constructor = GrannySmithApple;
+			 	//给子类的prototype对象上定义一个方法让子类的实例可以继承这个方法，继承了子类的子类也可以调用此方法
+			  	GrannySmithApple.prototype.eat = function() {
+			  		//首先在内部先实现父类的方法方法操作
+			    	Apple.prototype.eat.call(this);
+			    	//然后定义子类自己的方法操作；
+			    	log('Poor Grany Smith');
+			  	};
+				
+				// Instantiation
+				var apple = new Apple('Test Apple');
+				var grannyApple = new GrannySmithApple('xiaoming');
+				log(grannyApple);
+				log(apple.name); // Test Apple
+				log(grannyApple.name); // Granny Smith
+				
+				// Instance checks
+				log(apple instanceof Apple); // true
+				log(apple instanceof GrannySmithApple); // false
+				
+				log(grannyApple instanceof Apple); // true
+				log(grannyApple instanceof GrannySmithApple); // true
+
+				grannyApple.eat(); // Eating Granny Smith\nPoor Grany Smith
+			
+			}(window.console.log));
+			
+			//闭包
+			(function(log){
+				//这不是闭包
+				function foo(x){
+					var tmp =3;
+					function bar(y){
+						log(x+y+(++tmp));
+					}
+					bar(10);
+				}
+				foo(2);
+				
+				//这是闭包
+				function foo2(x){
+					var tmp=3;
+					return function(y){
+						log(x+y+(++tmp));
+					}
+				}
+				
+				var bar=foo2(2); //bar 现在是一个闭包
+				bar(10);
+				bar(10);
+				
+				//这也是闭包
+				function foo3(x){
+					var tmp=3;
+					return function(y){
+						log(x+y+tmp);
+						x.memb =x.memb ?x.memb +1:1;
+						log(x.a);
+					}
+				}
+				
+				var age=new Number(2);
+				var bar2=foo3(age);
+				bar2(10);
+				bar2(10);
+				
+				
+				
+			}(window.console.log))
+			
+			//访问函数内部的变量
+			function f1(){
+				var n=999;
+				
+				nAdd=function(){
+					n+=1;
+				}
+				
+				return function(){
+					console.log(n++);
+				}
+			}
+			
+			var result=f1();
+			result();
+			nAdd();
+			
+			result();
+			
+			var name="The Window";
+			
+			var obj={
+				name:'My Object',
+				
+				getNameFunc:function(){
+					return function(){
+						return this.name;
+					}
+				}
+			}
+
+			console.log(obj.getNameFunc()());
+			
+	</script>
 	
 </body>
 </html>
