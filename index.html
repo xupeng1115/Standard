@@ -178,8 +178,73 @@
 		</li>
 		<li>
 			<h3>
-				使用闭包，
+				使用闭包，理解闭包，访问保存函数内部的变量的值；
 			</h3>
+		</li>
+		<li>
+			<h3>
+				不要在循环语句中创建函数，容易产生闭包；
+			</h3>
+		</li>
+		<li>
+			<h3>
+				不用eval函数
+			</h3>
+		</li>
+		<li>
+			<h3>
+				this关键字,指向全局或者调用者的定义域或者DOM树的某一节点（事件处理）或者指向一个新创建的对象,还有可能指向其他对象（call,apply）;
+			</h3>
+		</li>
+		<li>
+			<h3>
+				首选函数编程
+			</h3>
+		</li>
+		<li>
+			<h3>
+				使用ES5数组和对象的属性的迭代；
+			</h3>
+		</li>
+		<li>
+			<h3>
+				不使用switch语句
+			</h3>
+		</li>
+		<li>
+			<h3>
+				使用数组和对象字面量；
+			</h3>
+		</li>
+		<li>
+			<h3>
+				不修改內建对象的原型链；
+			</h3>
+		</li>
+		<li>
+			<h3>
+				自定义toString()来控制对象字符串化；
+			</h3>
+		</li>
+		<li>
+			<h3>
+				一元操作符一般不使用圆括号，delete,typeof void ,return ,throw new case等;
+			</h3>
+		</li>
+		<li>
+			<h3>
+				统一使用单引号拼接HTML字符串；,return 后面添加；
+			</h3>
+		</li>
+		<li>
+			<h3>
+				使用三元条件判断,复杂时不使用；
+			</h3>
+		<li>
+			<h3>
+				
+			</h3>
+		</li>
 		</li>
 	</ol>
 	
@@ -324,9 +389,7 @@
 				bar2(10);
 				bar2(10);
 				
-				
-				
-			}(window.console.log))
+			}(window.console.log));
 			
 			//访问函数内部的变量
 			function f1(){
@@ -360,6 +423,74 @@
 			}
 
 			console.log(obj.getNameFunc()());
+			
+			(function(log,w){
+				'use strict';
+				var numbers=[1,2,3],
+					i;
+				function logNumber(index,nubmber){
+					return function(){
+						log('Index' + i + 'with number' + numbers[i]);
+					}
+				}
+				for(var i=0;i<numbers.length;i++){
+					w.setTimeout(logNumber(i,numbers[i]),0);
+				}
+			}(window.console.log,window));
+			
+			(function(log){
+				var arr=[10,100,1000,10000],
+					sum=0,
+					i;
+				for(i=0;i<arr.length;i++){
+					sum+=arr[i];
+				}
+				log('The sum of array' + arr + 'is:' +sum);
+			}(window.console.log));
+			
+			(function(log){
+				var arr=[1,10,100,1000,10000];
+				var sum=arr.reduce(function(prevValue,currentValue){
+					return prevValue+currentValue;
+				},0)
+				log('The sum of array ' + arr + ' is:' +sum);
+			}(window.console.log));
+			
+			(function(log){
+  				'use strict';
+ 
+  				var numbers = [11, 3, 7, 9, 100, 20, 14, 10];
+ 
+  				var numbersGreaterTen = numbers.filter(function(element) {
+    				return element > 10;
+  				});
+ 
+  				log('From the list of numbers ' + numbers + ' only ' + numbersGreaterTen + ' are greater than ten');
+ 
+			}(window.console.log));
+			(function(log){
+  				'use strict';
+ 
+  				[1, 2, 3, 4, 5].every(function(element, index, arr) {
+    				log(element + ' at index ' + index + ' in array ' + arr);
+ 
+    				if(index !== 3) {
+      					return true;
+    				}
+  				});
+ 
+				var obj = {
+				    a: 'A',
+				    b: 'B',
+				    'c-d-e': 'CDE'
+				};
+ 
+  				Object.keys(obj).forEach(function(element, index, arr) {
+    				log('Key ' + element + ' has value ' + obj[element]);
+  				});
+
+			}(window.console.log));
+			
 			
 	</script>
 	
